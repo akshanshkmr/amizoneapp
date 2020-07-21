@@ -1,6 +1,6 @@
 # amizoneapp
 
-A new Flutter application.
+A Flutter application for amizone.
 
 ## Getting Started
 
