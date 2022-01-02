@@ -17,6 +17,6 @@ Future<Map> getCookie () async {
 
 void resetCookie (){
   SharedPreferences.getInstance().then((prefValue) => {
-    prefValue.setString("session_cookie", null)
+    prefValue.remove("session_cookie")
   });
 }

@@ -95,6 +95,7 @@ class _ResultGraphState extends State<ResultGraph> {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             elevation: 10,
             child: result==null?Center(child: CircularProgressIndicator()):
+            jsonDecode(result)['combined']['sgpa'].length==0?Center(child: Text('Result Not Published yet')):
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: PointsLineChart(PointsLineChart._createSampleData()),
