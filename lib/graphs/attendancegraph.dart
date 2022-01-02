@@ -3,35 +3,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:http/http.dart' as http;
-import 'mycourses.dart';
+import '../pages/mycourses.dart';
+import '../utils/remote_services.dart' as api;
 
-String _username;
-String _password;
-var result=null;
+var result;
+
 Map<String, double> dataMap = new Map();
 
-class Attendance extends StatefulWidget {
-  Attendance(String username, String password){
-    _username=username;
-    _password=password;
-  }
+class AttendanceGraph extends StatefulWidget {
   @override
-  _AttendanceState createState() => _AttendanceState();
+  _AttendanceGraphState createState() => _AttendanceGraphState();
 }
 
-class _AttendanceState extends State<Attendance> {
+class _AttendanceGraphState extends State<AttendanceGraph> {
   Future<String> getdata()async{
-    var r;
-    var map = new Map<String, dynamic>();
-    map['username'] = _username;
-    map['password'] = _password;
-    r=await http.post("https://amizone-api.herokuapp.com/courses", body: map);
+    http.Response res = await api.courses();
     setState((){
-      result=r.body;
+      result=res.body;
     });
     double low=0,med=0,high=0;
-    var list=List<double>.from(jsonDecode(result)['Percentage']);
-    print(list);
+    var list=List<double>.from(jsonDecode(result)['attendance_pct']);
     for (int i=0; i<list.length; i++) {
       if(list[i]<75)
         low=low+1;
@@ -43,11 +34,9 @@ class _AttendanceState extends State<Attendance> {
     dataMap.putIfAbsent('Below 75', () => low);
     dataMap.putIfAbsent('75 To 85', () => med);
     dataMap.putIfAbsent('Above 85', () => high);
-    return r;
   }
   @override
   void initState() {
-//    result=null;
     setState(() {
       getdata();
     });
@@ -73,14 +62,15 @@ class _AttendanceState extends State<Attendance> {
               child: PieChart(
               dataMap: dataMap,
               chartType: ChartType.ring,
-              showChartValuesInPercentage: false,
-              showChartValuesOutside: true,
+              chartValuesOptions: ChartValuesOptions(
+                decimalPlaces: 0,
+              ),
               ),
             ),
           ),
         ),
         onTap: (){
-          Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => Courses(_username,_password)));
+          Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => Courses()));
         },
       ),
     );

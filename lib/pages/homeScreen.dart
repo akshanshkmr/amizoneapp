@@ -1,46 +1,31 @@
 import 'dart:convert';
-import 'package:amizoneapp/attendancegraph.dart';
-import 'package:amizoneapp/resultgraph.dart';
+import '../graphs/attendancegraph.dart';
+import '../graphs/resultgraph.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'drawer.dart';
 import 'package:http/http.dart'as http;
 import 'package:toast/toast.dart';
+import '../utils/remote_services.dart' as api;
 
-String _username;
-String _password;
-var result=null;
+var result;
 
 class Home extends StatefulWidget {
-  Home(String u, String p){
-    _username=u;
-    _password=p;
-  }
-
   @override
   _HomeState createState() => _HomeState();
 }
+
 class _HomeState extends State<Home> {
-  Future<String> getdata()async{
-    var r;
-//    SharedPreferences.getInstance().then((prefValue) => {
-//      _username=prefValue.getString("username"),
-//      _password=prefValue.getString("password"),
-//    });
-    var map = new Map<String, dynamic>();
-    map['username'] = _username;
-    map['password'] = _password;
-    r=await http.post("https://amizone-api.herokuapp.com/timetable", body: map);
+
+  Future<String> getdata() async{
+    http.Response res = await api.timetable();
     setState((){
-      result=r.body;
+      result=res.body;
     });
-    print(result);
-    return r;
   }
+
   @override
   void initState() {
-//    result=null;
     setState(() {
       getdata();
     });
@@ -62,7 +47,6 @@ class _HomeState extends State<Home> {
               setState(() {
                 result=null;
                 Toast.show('Please Wait', context,duration: Toast.LENGTH_LONG);
-//                Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => Home(_username,_password)));
               });
             },)
         ],
@@ -75,8 +59,8 @@ class _HomeState extends State<Home> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: <Widget>[
-                Attendance(_username,_password),
-                ResultGraph(_username,_password),
+                AttendanceGraph(),
+                ResultGraph(),
               ],
             ),
           ),
@@ -84,14 +68,14 @@ class _HomeState extends State<Home> {
             padding: EdgeInsets.symmetric(vertical: 10),
             height: MediaQuery.of(context).size.height-300,
             child: Center(child: result==null?CircularProgressIndicator():
-            jsonDecode(result)['Time'].length==0?Text('No classes today, Enjoy!'):
+            jsonDecode(result)['class_time'].length==0?Text('No classes today, Enjoy!'):
             ListView.builder(
-              itemCount: jsonDecode(result)['Time'].length,
+              itemCount: jsonDecode(result)['class_time'].length,
               itemBuilder: (BuildContext ctext,int index){
                 return ListTile(
-                  title: Text('['+jsonDecode(result)['courseCode'][index].toString()+'] '+jsonDecode(result)['Time'][index].toString()),
-                  subtitle: Text(jsonDecode(result)['courseTeacher'][index].toString()),
-                  trailing: Text(jsonDecode(result)['classLocation'][index].toString()),
+                  title: Text('['+jsonDecode(result)['course_code'][index].toString()+'] '+jsonDecode(result)['class_time'][index].toString()),
+                  subtitle: Text(jsonDecode(result)['course_teacher'][index].toString()),
+                  trailing: Text(jsonDecode(result)['class_location'][index].toString()),
                 );
               },
             )

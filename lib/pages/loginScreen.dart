@@ -1,8 +1,8 @@
 import 'package:amizoneapp/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
+import 'homeScreen.dart';
+import '../utils/remote_services.dart' as api;
 
 String _username;
 String _password;
@@ -71,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         textColor: Colors.white,
                         color: Colors.blue,
-                        child: isloading==true?CircularProgressIndicator():Text('Login'),
+                        child: isloading==true?CircularProgressIndicator(backgroundColor: Colors.white,):Text('Login'),
                         onPressed: ()async {
                           setState(() {
                             isloading=true;
@@ -97,11 +97,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                           }
                           else{
-                            var map = new Map<String, dynamic>();
-                            map['username'] = _username;
-                            map['password'] = _password;
-                            await http.post("https://amizone-api.herokuapp.com/login", body: map).then((response) => result = response.body);
-                            if(result=='Incorrect Username or Password'){
+                            await api.login(_username, _password).then((res)=>result=res);
+                            if(result.statusCode == 401){
                               setState(() {
                                 isloading=false;
                               });
@@ -122,11 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               );
                             }
                             else {
-                              SharedPreferences.getInstance().then((prefValue) => {
-                                prefValue.setString("username", _username),
-                                prefValue.setString("password", _password)
-                              });
-                              Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => MyApp()));
+                              Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => Home()));
                             }
                           }
                         },

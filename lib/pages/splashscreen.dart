@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'loginScreen.dart';
 import 'homeScreen.dart';
+import '../utils/cookies.dart';
 
-String u,p;
+Map sessionCookie;
 
 class Splash extends StatefulWidget {
   @override
@@ -12,13 +12,18 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
+
+  Future<String> getdata() async{
+    var c = await getCookie();
+    setState((){
+      sessionCookie = c;
+    });
+  }
+
   @override
   void initState() {
-    SharedPreferences.getInstance().then((prefValue) => {
-      this.setState(() {
-        u=prefValue.getString("username");
-        p=prefValue.getString("password");
-      }),
+    setState(() {
+      getdata();
     });
     super.initState();
   }
@@ -26,20 +31,22 @@ class _SplashState extends State<Splash> {
   Widget build(BuildContext context) {
     return new SplashScreen(
       seconds: 3,
-      navigateAfterSeconds: (u==null && p==null) ?LoginScreen():Home(u,p),
-      title: new Text('Made with Flutter',
-        style: new TextStyle(
+      navigateAfterSeconds: (sessionCookie==null) ?LoginScreen():Home(),
+      title: Text('Made with Flutter',
+        style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20.0,
             color: Colors.black,
         ),
       ),
-      image: new Image.network('https://flutter.io/images/catalog-widget-placeholder.png'),
+      image: Image.asset('assets/images/flutter.png'),
       backgroundColor: Colors.white,
       styleTextUnderTheLoader: new TextStyle(),
-      photoSize: 100.0,
-      loaderColor: Colors.red,
-      loadingText: Text('By Akshansh Kumar',style: TextStyle(color: Colors.black),),
+      photoSize: 80,
+      useLoader: false,
+      loadingText: Text('By Akshansh Kumar',
+          style: TextStyle(
+              fontWeight: FontWeight.bold)),
     );
   }
 }

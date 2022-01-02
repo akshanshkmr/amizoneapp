@@ -1,40 +1,23 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'drawer.dart';
 import 'package:http/http.dart'as http;
 import 'package:toast/toast.dart';
+import '../utils/remote_services.dart' as api;
 
-String _username;
-String _password;
-var result=null;
+var result;
 
 class Faculty extends StatefulWidget {
-  Faculty(String username, String password){
-    _username=username;
-    _password=password;
-  }
-
   @override
   _FacultyState createState() => _FacultyState();
 }
 
 class _FacultyState extends State<Faculty> {
   Future<String> getdata()async{
-    var r;
-//    SharedPreferences.getInstance().then((prefValue) => {
-//      _username=prefValue.getString("username"),
-//      _password=prefValue.getString("password"),
-//    });
-    var map = new Map<String, dynamic>();
-    map['username'] = _username;
-    map['password'] = _password;
-    r=await http.post("https://amizone-api.herokuapp.com/faculty", body: map);
+    http.Response res = await api.faculty();
     setState((){
-      result=r.body;
+      result=res.body;
     });
-    print(result);
-    return r;
   }
   @override
   void initState() {
@@ -60,7 +43,6 @@ class _FacultyState extends State<Faculty> {
                 setState(() {
                   result=null;
                   Toast.show('Please Wait', context,duration: Toast.LENGTH_LONG);
-//                  Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => Faculty(_username,_password)));
                 });
               },)
           ],
@@ -71,7 +53,7 @@ class _FacultyState extends State<Faculty> {
           itemCount: jsonDecode(result)['faculties'].length,
           itemBuilder: (BuildContext ctext,int index){
             return ListTile(
-              trailing: CircleAvatar(backgroundImage:NetworkImage(jsonDecode(result)['images'][index].toString()),radius: 20,),
+              trailing: CircleAvatar(backgroundImage:NetworkImage(jsonDecode(result)['images'][index].toString()),radius: 25,),
               title: Text(jsonDecode(result)['faculties'][index].toString()),
               subtitle: Text(jsonDecode(result)['subjects'][index].toString()),
             );
