@@ -64,6 +64,7 @@ class _HomeState extends State<Home> {
               ],
             ),
           ),
+
           Container(
             padding: EdgeInsets.symmetric(vertical: 10),
             height: MediaQuery.of(context).size.height-300,
@@ -73,9 +74,12 @@ class _HomeState extends State<Home> {
               itemCount: jsonDecode(result)['class_time'].length,
               itemBuilder: (BuildContext ctext,int index){
                 return ListTile(
-                  title: Text('['+jsonDecode(result)['course_code'][index].toString()+'] '+jsonDecode(result)['class_time'][index].toString()),
+                  // isThreeLine: true,
+                  title: Text('['+jsonDecode(result)['course_code'][index].toString()+'] ' + jsonDecode(result)['course_title'][index].toString()),
+                  leading: Icon(Icons.circle, color:jsonDecode(result)['attendance'][index]<0?Colors.redAccent:
+                  jsonDecode(result)['attendance'][index]>0?Colors.greenAccent:Colors.lightBlueAccent),
                   subtitle: Text(jsonDecode(result)['course_teacher'][index].toString()),
-                  trailing: Text(jsonDecode(result)['class_location'][index].toString()),
+                  trailing: Text(jsonDecode(result)['class_location'][index].toString() + '\n' + jsonDecode(result)['class_time'][index].toString()),
                 );
               },
             )

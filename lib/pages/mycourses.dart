@@ -89,7 +89,7 @@ class _CoursesState extends State<Courses> {
                           trailing:CircleAvatar(
                               radius: 25,
                               child:Text(double.parse(jsonDecode(result)['attendance_pct'][index].toString()).truncate().toString()),
-                              backgroundColor: double.parse(jsonDecode(result)['attendance_pct'][index].toString())>95?Colors.green:double.parse(jsonDecode(result)['attendance_pct'][index].toString())>75?Colors.yellow:Colors.red)
+                              backgroundColor: double.parse(jsonDecode(result)['attendance_pct'][index].toString())>95?Colors.greenAccent:double.parse(jsonDecode(result)['attendance_pct'][index].toString())>75?Colors.lightBlueAccent:Colors.redAccent)
                         );
                       },
                   ),

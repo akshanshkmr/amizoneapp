@@ -92,7 +92,7 @@ class _ResultState extends State<Result> {
                       trailing: CircleAvatar(
                         radius: 25,
                         child:Text(jsonDecode(result)['sem_result']['grade_obtained'][index].toString()),
-                        backgroundColor: double.parse(jsonDecode(result)['sem_result']['grade_point'][index].toString())>=8?Colors.green:double.parse(jsonDecode(result)['sem_result']['grade_point'][index].toString())>=5?Colors.yellow:Colors.red)
+                        backgroundColor: double.parse(jsonDecode(result)['sem_result']['grade_point'][index].toString())>=8?Colors.greenAccent:double.parse(jsonDecode(result)['sem_result']['grade_point'][index].toString())>=5?Colors.lightBlueAccent:Colors.redAccent)
                   );
                 },
               ),
