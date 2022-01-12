@@ -9,6 +9,7 @@ Future<http.Response> login(String username, String password) async{
   http.Response loginResponse = await http.post(Uri.parse(loginUrl), body:loginMap);
   if(loginResponse.statusCode==200){
     setCookie(loginResponse.body);
+    setCookieCreds(username, password);
   }
   return loginResponse;
 }
