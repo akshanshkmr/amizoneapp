@@ -14,6 +14,7 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> {
 
   Future<String> getdata() async{
+    resetCookie();
     getCookieFromCreds();
     var c = await getCookie();
     setState((){
@@ -32,7 +33,7 @@ class _SplashState extends State<Splash> {
   Widget build(BuildContext context) {
     return new SplashScreen(
       seconds: 3,
-      navigateAfterSeconds: (sessionCookie==null) ?LoginScreen():Home(),
+      navigateAfterSeconds: (sessionCookie==null) ? LoginScreen():Home(),
       title: Text('Made with Flutter',
         style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -44,7 +45,7 @@ class _SplashState extends State<Splash> {
       backgroundColor: Colors.white,
       styleTextUnderTheLoader: new TextStyle(),
       photoSize: 80,
-      useLoader: false,
+      useLoader: true,
       loadingText: Text('By Akshansh Kumar',
           style: TextStyle(
               fontWeight: FontWeight.bold)),

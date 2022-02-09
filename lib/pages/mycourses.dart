@@ -37,6 +37,7 @@ class _CoursesState extends State<Courses> {
   Future<String> resetState()async{
     setState((){
       result=null;
+      Toast.show('Please Wait', context,duration: Toast.LENGTH_LONG);
     });
   }
 @override
@@ -59,10 +60,7 @@ class _CoursesState extends State<Courses> {
           actions: <Widget>[
             IconButton(icon: Icon(Icons.refresh),
             onPressed: (){
-              setState(() {
-                result=null;
-                Toast.show('Please Wait', context,duration: Toast.LENGTH_LONG);
-              });
+              resetState();
             },)
           ],
         ),

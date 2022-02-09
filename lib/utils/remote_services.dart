@@ -76,3 +76,10 @@ Future<http.Response> timetable() async{
   http.Response timetableResponse = await http.get(Uri.parse(timetableUrl), headers: sessionCookie);
   return timetableResponse;
 }
+
+Future<http.Response> timetableByDate(String date) async{
+  String timetableUrl = 'https://amizone-apiv2.herokuapp.com/timetable?date=${date}';
+  Map sessionCookie = await getCookie();
+  http.Response timetableResponse = await http.get(Uri.parse(timetableUrl), headers: sessionCookie);
+  return timetableResponse;
+}
