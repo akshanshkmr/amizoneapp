@@ -9,7 +9,7 @@ import 'package:http/http.dart'as http;
 import 'package:toast/toast.dart';
 import '../utils/remote_services.dart' as api;
 import 'package:flutter_date_picker_timeline/flutter_date_picker_timeline.dart';
-import 'loginScreen.dart';
+import 'splashscreen.dart';
 
 var result;
 var selectedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -27,7 +27,7 @@ class _HomeState extends State<Home> {
       var test = jsonDecode(res.body)['class_time'].length;
     }
     catch (e){
-      Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => LoginScreen()));
+      Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => Splash()));
     }
     setState((){
       result=res.body;

@@ -14,7 +14,6 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> {
 
   Future<String> getdata() async{
-    resetCookie();
     getCookieFromCreds();
     var c = await getCookie();
     setState((){

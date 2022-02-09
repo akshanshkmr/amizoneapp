@@ -36,7 +36,6 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.4
   flutter_date_picker_timeline: ^0.3.3
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
